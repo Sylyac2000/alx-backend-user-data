@@ -13,7 +13,7 @@ def filter_datum(fields: List[str],
     regex [^;]+: one or more characters that are not a semicolon (;)
     replacement = separator.join(f"{field}={redaction}" for field in fields)
     """
-    regex = separator.join(f"{field}=[^;]+" for field in fields)
+    regex = separator.join(f"{field}=[^{separator}]+" for field in fields)
     return re.sub(regex,
                   separator.join(f"{field}={redaction}" for field in fields),
                   message)
