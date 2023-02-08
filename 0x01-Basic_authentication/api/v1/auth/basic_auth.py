@@ -4,6 +4,7 @@
 from flask import Flask
 from flask import request
 from api.v1.auth.auth import Auth
+from models.user import User
 import base64
 import binascii
 
@@ -64,3 +65,22 @@ class BasicAuth(Auth):
         else:
             str_decoded = decoded_base64_authorization_header.split(':')
             return str_decoded[0], str_decoded[1]
+
+    def user_object_from_credentials(self, user_email: str,
+                                     user_pwd: str) -> TypeVar('User'):
+        """get user object from credentials"""
+        if user_email is None:
+            return None
+        if user_pwd is None:
+            return None
+        if not isinstance(user_email, str) and not isinstance(user_pwd, str):
+            return None
+        try:
+            users = User.search({'email': user_email})
+        except Exception:
+            return None
+        if len(users) <= 0:
+            return None
+        if users[0].is_valid_password(user_pwd):
+            return users[0]
+        return None
