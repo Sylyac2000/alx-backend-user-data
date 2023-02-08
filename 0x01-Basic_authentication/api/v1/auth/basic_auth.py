@@ -30,7 +30,7 @@ class BasicAuth(Auth):
 
     def is_base64(self, string: str) -> bool:
         try:
-            base64.b64decode(string)
+            base64.b64decode(string, validate=True)
             return True
         except binascii.Error:
             return False
@@ -46,7 +46,8 @@ class BasicAuth(Auth):
             return None
         else:
             str_decoded = base64.b64decode(
-                           base64_authorization_header).decode('utf-8')
+                           base64_authorization_header,
+                           validate=True).decode('utf-8')
             return str_decoded
 
     def extract_user_credentials(
