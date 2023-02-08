@@ -52,9 +52,9 @@ class BasicAuth(Auth):
                            validate=True).decode('utf-8')
             return str_decoded
 
-    def extract_user_credentials(
+    """ def extract_user_credentials(
             self, decoded_base64_authorization_header: str) -> str:
-        """extract user credentials"""
+        #extract user credentials
         if decoded_base64_authorization_header is None:
             return None, None
         if not isinstance(decoded_base64_authorization_header, str):
@@ -64,7 +64,22 @@ class BasicAuth(Auth):
             return None, None
         else:
             str_decoded = decoded_base64_authorization_header.split(':')
-            return str_decoded[0], str_decoded[1]
+            return str_decoded[0], str_decoded[1]"""
+
+    def extract_user_credentials(
+            self, decoded_base64_authorization_header: str) -> str:
+        """extract user credentials"""
+        if type(decoded_base64_authorization_header) == str:
+            pattern = r'(?P<user>[^:]+):(?P<password>.+)'
+            field_match = re.fullmatch(
+                pattern,
+                decoded_base64_authorization_header.strip(),
+            )
+            if field_match is not None:
+                user = field_match.group('user')
+                password = field_match.group('password')
+                return user, password
+        return None, None
 
     def user_object_from_credentials(self, user_email: str,
                                      user_pwd: str) -> TypeVar('User'):
