@@ -29,6 +29,7 @@ class BasicAuth(Auth):
             return str_header[1]
 
     def is_base64(self, string: str) -> bool:
+        """check if string is base64"""
         try:
             base64.b64decode(string, validate=True)
             return True
