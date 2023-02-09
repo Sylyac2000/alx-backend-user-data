@@ -35,9 +35,9 @@ def before_request():
     if not bool_res:
         return
     if auth.authorization_header(request) is None:
-        raise abort(401)
+        abort(401)
     if auth.current_user(request) is None:
-        raise abort(403)
+        abort(403)
     request.current_user = auth.current_user(request)
 
 
