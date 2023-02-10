@@ -46,3 +46,13 @@ class SessionAuth(Auth):
         else:
             user_id = SessionAuth.user_id_by_session_id.get(session_id)
             return user_id
+
+    def current_user(self, request=None) -> TypeVar('User'):
+        """get current user
+        Return:
+            - a user
+        """
+        session_cookie = self.session_cookie(request)
+        user_id = self.user_id_for_session_id(session_cookie)
+        user = User.get(user_id)
+        return user
