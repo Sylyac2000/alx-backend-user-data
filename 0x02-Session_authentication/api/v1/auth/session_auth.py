@@ -33,3 +33,16 @@ class SessionAuth(Auth):
             # add to the dict
             SessionAuth.user_id_by_session_id.update({session_id: user_id})
             return session_id
+
+    def user_id_for_session_id(self, session_id: str = None) -> str:
+        """function that return a user_id
+        Return:
+            - a user ID or None
+        """
+        if session_id is None:
+            return None
+        if not isinstance(session_id, str):
+            return None
+        else:
+            user_id = SessionAuth.user_id_by_session_id.get(session_id)
+            return user_id
