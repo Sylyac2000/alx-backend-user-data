@@ -10,6 +10,7 @@ from user import Base
 from user import User
 from typing import TypeVar
 
+
 class DB:
     """DB class
     """
@@ -30,7 +31,7 @@ class DB:
             DBSession = sessionmaker(bind=self._engine)
             self.__session = DBSession()
         return self.__session
-        
+
     def add_user(self, email: str, hashed_password: str) -> TypeVar('User'):
         """function that return a user object
         Return:
