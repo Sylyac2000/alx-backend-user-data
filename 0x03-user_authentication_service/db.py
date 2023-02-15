@@ -5,6 +5,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
+from sqlalchemy import text
 
 from user import Base, User
 
@@ -31,11 +32,19 @@ class DB:
         return self.__session
 
     def add_user(self, email: str, hashed_password: str) -> User:
-        """function that return a user object
+        """function that add and return a user object
         Return:
             - user
         """
         user = User(email=email, hashed_password=hashed_password)
         self._session.add(user)
         self._session.commit()
+        return user
+
+    def find_user_by(self, **kwargs) -> User:
+        """function that find and return a user object
+        Return:
+            - user
+        """
+        user = self._session.query(User).filter_by(**kwargs).one()
         return user
