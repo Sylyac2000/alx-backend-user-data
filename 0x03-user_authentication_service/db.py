@@ -5,7 +5,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
-from sqlalchemy import text
+from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.exc import InvalidRequestError
 
 from user import Base, User
 
@@ -47,4 +48,22 @@ class DB:
             - user
         """
         user = self._session.query(User).filter_by(**kwargs).one()
+        if not user:
+            raise NoResultFound("No user found")
         return user
+
+    def update_user(self, user_id: int, **kwargs) -> None:
+        """function that update a user and return None
+        Return:
+            - None
+        """
+        try:
+            user = self.find_user_by(id=user_id)
+            for key, value in kwargs.items():
+                if hasattr(user, key):
+                    setattr(user, key, value)
+                else:
+                    raise InvalidRequestError
+            self._session.commit()
+        except (NoResultFound, InvalidRequestError, ValueError):
+            raise ValueError
