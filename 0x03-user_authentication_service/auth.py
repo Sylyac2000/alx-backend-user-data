@@ -47,14 +47,23 @@ class Auth:
             Return:
                 bool
         """
+        if not email or not password:
+            return False
         try:
             user = self._db.find_user_by(email=email)
             is_correct_pwd = is_valid(user.hashed_password, password)
             return is_correct_pwd
-        except NoResultFound:
+        except (NoResultFound, InvalidRequestError):
             return False
 
     def _generate_uuid() -> str:
         """generate uuid
         """
         return uuid.uuid4()
+
+    def create_session(self, email: str) -> str:
+        """validate login
+            Return:
+                bool
+        """
+        pass
