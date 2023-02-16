@@ -2,6 +2,7 @@
 """module to encrypt
 """
 import bcrypt
+import uuid
 from db import DB
 from user import User
 from sqlalchemy.orm.exc import NoResultFound
@@ -42,9 +43,18 @@ class Auth:
             return user
 
     def valid_login(self, email, password) -> bool:
+        """validate login
+            Return:
+                bool
+        """
         try:
             user = self._db.find_user_by(email=email)
             is_correct_pwd = is_valid(user.hashed_password, password)
             return is_correct_pwd
         except NoResultFound:
             return False
+
+    def _generate_uuid() -> str:
+        """generate uuid
+        """
+        return uuid.uuid4()
