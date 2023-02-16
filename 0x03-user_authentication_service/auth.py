@@ -9,9 +9,16 @@ from sqlalchemy.exc import InvalidRequestError
 
 
 def _hash_password(password: str) -> bytes:
+    """return hashed password
+    """
     salt = bcrypt.gensalt()
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
     return hashed_password
+
+
+def is_valid(hashed_password: bytes, password: str) -> bool:
+    """Check if password is valid, correct"""
+    return bcrypt.checkpw(password.encode('utf-8'), hashed_password)
 
 
 class Auth:
@@ -33,3 +40,11 @@ class Auth:
             user = self._db.add_user(email=email,
                                      hashed_password=str_pwd_hashed)
             return user
+
+    def valid_login(self, email, password) -> bool:
+        try:
+            user = self._db.find_user_by(email=email)
+            is_correct_pwd = is_valid(user.hashed_password, password)
+            return is_correct_pwd
+        except NoResultFound:
+            return False
