@@ -100,7 +100,6 @@ class Auth:
         except (NoResultFound, InvalidRequestError):
             return None
 
-
     def destroy_session(self, user_id: int) -> None:
         """destroy session by user_id
             Return:
