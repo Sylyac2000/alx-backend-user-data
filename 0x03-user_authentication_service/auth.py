@@ -65,7 +65,7 @@ class Auth:
     def valid_user(self, email: str) -> User:
         """valid_user email
             Return:
-                bool
+                user object
         """
         if not email:
             return None
@@ -86,3 +86,16 @@ class Auth:
             self._db.update_user(user.id, session_id=session_id)
             return session_id
         return None
+
+    def get_user_from_session_id(self, session_id: str) -> User:
+        """get user by session id
+            Return:
+                a user object
+        """
+        if not session_id:
+            return None
+        try:
+            user = self._db.find_user_by(session_id=session_id)
+            return user
+        except (NoResultFound, InvalidRequestError):
+            return None
