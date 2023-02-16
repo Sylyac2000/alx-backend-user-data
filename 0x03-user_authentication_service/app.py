@@ -2,7 +2,7 @@
 """Flask app module
 """
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, abort
 from auth import Auth
 
 
@@ -15,6 +15,20 @@ def index():
     """index endpoint
     """
     return jsonify({"message": "Bienvenue"})
+
+
+@app.route('/sessions', methods=['POST'], strict_slashes=False)
+def login() -> str:
+    """login
+    """
+    email = request.form['email']
+    password = request.form['password']
+    if AUTH.valid_login(email, password):
+        session_id = AUTH.create_session(email)
+        response = jsonify({"email": f"{email}", "message": "logged in"})
+        response.set_cookie('session_id', session_id)
+        return response
+    abort(401)
 
 
 @app.route('/users', methods=['POST'], strict_slashes=False)
