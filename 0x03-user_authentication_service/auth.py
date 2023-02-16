@@ -42,7 +42,7 @@ class Auth:
                                      hashed_password=str_pwd_hashed)
             return user
 
-    def valid_login(self, email, password) -> bool:
+    def valid_login(self, email: str, password: str) -> bool:
         """validate login
             Return:
                 bool
