@@ -22,6 +22,12 @@ def is_valid(hashed_password: bytes, password: str) -> bool:
     return bcrypt.checkpw(password.encode('utf-8'), hashed_password)
 
 
+def _generate_uuid() -> str:
+    """generate uuid
+    """
+    return str(uuid.uuid4())
+
+
 class Auth:
     """Auth class to interact with the authentication database.
     """
@@ -55,11 +61,6 @@ class Auth:
             return is_correct_pwd
         except (NoResultFound, InvalidRequestError):
             return False
-
-    def _generate_uuid() -> str:
-        """generate uuid
-        """
-        return str(uuid.uuid4())
 
     def create_session(self, email: str) -> str:
         """validate login
