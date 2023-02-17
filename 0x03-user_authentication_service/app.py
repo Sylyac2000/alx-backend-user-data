@@ -46,6 +46,19 @@ def logout() -> str:
     raise abort(403)
 
 
+@app.route('/profile', methods=['GET'], strict_slashes=False)
+def profile() -> str:
+    """profile
+    """
+    session_id = request.cookies.get('session_id')
+    if not session_id:
+        raise abort(403)
+    user = AUTH.get_user_from_session_id(session_id)
+    if user is None:
+        raise abort(403)
+    return jsonify({"email": user.email})
+
+
 @app.route('/users', methods=['POST'], strict_slashes=False)
 def register() -> str:
     """register user
